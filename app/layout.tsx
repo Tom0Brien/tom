@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 		siteName: "tomobrien.vercel.app",
 		images: [
 			{
-				url: "https://tomobrien.vercel.app/og.png",
+				url: "https://tomobrien.vercel.app/favicon.png",
 				width: 1920,
 				height: 1080,
 			},

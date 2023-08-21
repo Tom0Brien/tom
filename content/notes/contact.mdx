@@ -1,0 +1,267 @@
+---
+title: "Contact"
+description: Modelling contact
+date: "2023-01-01"
+published: true
+---
+
+Modeling contact in robotics can be challenging because it involves modelling the interactions between two or more objects that are in contact with each other.
+
+There are several approaches that can be used to model contact in robotics, including the following:
+
+1. Contact models: These models simulate the continuous interaction between two objects that are in contact with each other. Contact models can be used to calculate the forces and moments exerted on the objects as a function of time and can be used to predict the dynamic behavior of the objects during contact.
+2. Impact models: These models simulate the collision between two objects as a single, instantaneous event. Impact models are useful for simulating high-speed collisions and can be used to calculate the forces and impulses exerted on the objects during the collision.
+3. Friction models: These models simulate the forces that arise due to the relative motion between two objects that are in contact with each other. Friction models can be used to predict the forces and moments exerted on the objects due to sliding or rolling friction.
+4. Deformation models: These models simulate the deformation of one or more objects due to contact forces. Deformation models can be used to predict the shape and behavior of the objects during contact and can be used to simulate soft materials such as rubber or foam.
+5. Hybrid models: These models combine elements of different types of contact models to simulate the complex interactions that can occur during contact. Hybrid models can be used to simulate a wide range of contact scenarios and can be tailored to the specific needs of a given application.
+
+# Contact Models
+
+There exist two fundamentally different methods for contact models. The **soft contac**t method models the interaction by force elements (i.e. spring-damper) where the force is only a function of the location and velocity of the point in contact. The **hard contact** method treats the contact as a kinematic constraint.
+
+### Soft Contact Model
+
+For soft contact model we can identify the point when first making contact with the ground as $r_{c0}$. The ground to object interaction can the be modeled as a linear spring-damper where the contact force is calculated as follows:
+
+$$
+F_c=K_p(r_c-r_{c0}) +K_d\dot{r_c}
+$$
+
+While modeling the environment like this seems logic and physically correct from a first point of view, it turns out that finding physically correct spring and damping parameters to simulate the system dynamics is almost impossible (according to Zurich notes).
+
+### Hard Contact Model
+
+Instead of modelling the contact forces as force elements (spring/damper), contacts can be modeled as kinematic constraints. If a point $C$ is in contact, it is assumed that is unable to move:
+
+$$
+r_c = constant \\ \dot{r}_c = J_c\dot{q} = 0 \\ \ddot{r}_c = J_c \ddot{q} + \dot{J_c}\dot{q} = 0
+$$
+
+where $J_c$ is the geometric Jacobian.
+
+From the constraint $\ddot{r_c} = J_c \ddot{q} + \dot{J_c}\dot{q} = 0$ and the Lagrangian free floating equations of motion we can identify the contact force:
+
+$$
+F_c = (J_cM^{-1}J_c^T)^{-1}(J_cM^{-1}(G^Tu - C(\dot{q},q)\dot{q}-g(q)) + \dot{J_c}\dot{q})
+$$
+
+This is quite useful, as an estimate of the ground reaction force can be obtained without any contact force sensor.
+
+### Contact Consistent Dynamics
+
+We can define the dynamically consistent support null-space matrix as:
+
+$$
+N_c = I - M^{-1}J_c^T(J_cM^{-1}J_c^T)^{-1}J_c
+$$
+
+$N_c$ defines the generalized space of motion where there are no acceleration or force coupling effects on the supporting links.
+
+Substituting the solution for the contact force $F_c$ into the equations of motion results in:
+
+$$
+M\ddot{q}+N_c^TC(q,\dot{q})q + g(q) +J_c^T(J_cM^{-1}J_c^T)^{-1}\dot{J}_c\dot{q}=N_c^TG^Tu
+$$
+
+Substituting the support constraint ($\dot{J}_c\dot{q} = -J_c\ddot{q}$) yields the constraint consistent equations of motion can be compactly formulated as:
+
+$$
+N_c^T(M\ddot{q}+C(q,\dot{q})\dot{q}+g(q))=N_c^TG(q)^Tu.
+$$
+
+# Impact Models
+
+An impact model requires subdividing the analysis of the system dynamics into two intervals, before and after a change in the contact situation. There exists many methods to model the effect of the rapid dissipation in energy and large accelerations. Various coefficients can be used such as the coefficient of restitution and the impulse ratio, however, idealizing the contact event allows a derivation of an equation that computes an instantaneous change in velocity.
+
+## Method 1: Integration
+
+To resolve the contact impulse, we integrate equation of motion over the infinitesimal time before and after impact, denoted $t^-$ and $t^+$:
+
+### Lagrangian Form
+
+$$
+\begin{equation}
+\int_{t^-}^{t^+}\ddot{q} = M(\dot{q}^+-\dot{q}^-) + J_c^TF_c = 0
+\end{equation}
+$$
+
+Assuming a perfect inelastic collision with a Newtonian collision law, all contact points that are considered part of the collision instantaneously come to rest ($\dot{r}_c = J_c\dot{q}^+ = 0)$. Combining this constraint with the integrated equation of motion, we can solve for the impulsive force as:
+
+$$
+F_c = (J_cM^{-1}J_c^T)^{-1}J_c\dot{q}^- = Λ_c\dot{r}_c^-
+$$
+
+Looking closer, this equation is of the form **_impulse = mass x speed,_** thus we can label $Λ_c$ as the so called end-effector inertia.
+
+Substituting this expression the impulse force $F_c$ back into the integral result $(1)$ yields the instantaneous change in generalized velocities:
+
+$$
+\Delta q = q^+-q^- = -M^{-1}J_c^T(J_cM^{-1}J_c^T)^{-1}J_c\dot{q}^{-1}
+$$
+
+Rearranging for $q^+$ yields an expression which includes the null-space projector $N_c$:
+
+$$
+\dot{q}^+ = (I
+-M^{-1}J_c^T(J_cM^{-1}J_c^T)^{-1}J_c)\dot{q}^{-1} = N_c\dot{q}^-
+$$
+
+This result that is obtained by satisfying the post impact contact constraint. This is intuitively clear, by using the support null-space projector $N_c$, the pre-impact velocity $u^−$ is projected onto the support consistent manifold.
+
+### Hamiltonian Form
+
+The constraint equation in Hamiltonian form is the following:
+
+$$
+\begin{equation}
+0 = J_c^T(q)\dfrac{\partial H}{\partial p} = J_c^T(q)M^{-1}(q)p(t^+) \end{equation}
+$$
+
+We now integrate the momentum dynamics over the infinitesimal interval $t^+$ and $t^-$:
+
+$$
+\begin{equation}
+\int_{t^-}^{t^+}\dot{p} = \int_{t^-}^{t^+}(\dfrac{\partial{H}}{\partial{q}} + G_pu + G_c(q) F_c )
+\end{equation}
+$$
+
+The magnitude of $\dfrac{\partial{H}}{\partial{q}} + Bu$ over the interval $t^+$ and $t^-$ can be neglected, leading to the following:
+
+$$
+\begin{equation}
+p^+ - p^- = G_c(q)\int_{t^-}^{t^+}F_c \space dt
+\end{equation}
+$$
+
+If we substitute $(6)$ back into the constraint equation $(4)$ we obtain:
+
+$$
+\begin{equation}
+0 = G_c^T(q)M^{-1}(q)(p(t^-) + G_c (q)\int_{t^-}^{t^+}F_c \space  dt)
+\end{equation}
+$$
+
+Rearranging for $\int_{t^-}^{t^+}F_c\space dt$:
+
+$$
+\begin{equation}
+\int_{t^-}^{t^+} F_c\space dt = -(G_c^T(q)M^-1(q)G_c(q))^{-1}G_c^T(q)M^{-1}(q)p(t^-)
+\end{equation}
+$$
+
+If we substitute $(8)$ back into the integral result $(6)$ we obtain the momentum **projection operator**:
+
+$$
+\begin{equation}
+p^+ = (I - G_c(G_c^TM^{-1}G_c)^{-1}G_c^TM^{-1})p(t^-)
+\end{equation}
+$$
+
+## Method 2: Conservation of angular momentum
+
+If an external force is applied at a point of interest, angular momentum about that point must be conserved. Conservation of angular momentum is a physical property of a spinning system such that its spin remains constant unless it is acted upon by an external torque. If a contact scenario only considers external forces, the angular momentum conservation approach to deriving the impact reset can be used.
+
+Angular momentum can be calculated as follows:
+
+$$
+L = r × mv
+$$
+
+where r is the position of the mass relative to a given reference point, m is the mass and v is the velocity of the particle. Since rigid bodies consist of point masses, the following equation can be used to calculate the angular momentum about the impact point, and solving for $v^+$ allows the computation of the post impact velocity.
+
+$$
+L = \sum_i r_i \times m_i v_i^+ = \sum_i r_i \times m_i v_i^-
+$$
+
+## Method 3: Momentum Transformation
+
+A nonholonomic constraint is a constraint that is not holonomic . An important form of nonholonomic constraints are those that are expressed as a non-integrable, linear combination of generalized velocities of the form:
+
+$$
+J_c^T \dot{q} = 0_{c_n\times1}
+$$
+
+Mechanical systems with holonomic/nonholonomic constraints can be modeled as pH systems where the constraints appear as Lagrange multipliers, which are of the form:
+
+$$
+\begin{equation}
+\begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = \begin{bmatrix}
+0 & I \\
+-I & -D_p
+\end{bmatrix} \begin{bmatrix} \dfrac{\partial{H}}{\partial{q}}\\\dfrac{\partial{H}}{\partial{p}} \end{bmatrix} + \begin{bmatrix} 0 & 0 \\ G_p(q) & J_{c}(q) \end{bmatrix}\begin{bmatrix} u \\ F_c \end{bmatrix} \end{equation}
+$$
+
+In order to reduce the model to remove the Lagrange multiplier, we can perform a momentum transformation given by:
+
+$$
+\begin{equation}\mathbf{p} = Q_0^Tp = \begin{bmatrix} μ\\p_r\end{bmatrix} =
+\begin{bmatrix} A^T(q)\\Q^T(q) \end{bmatrix}p\end{equation}
+$$
+
+where $Q=(J_c^\perp(q))^T$ and $A$ is chosen such that $G_c^\perp A$ is invertible which implies $Q_0 = \begin{bmatrix} A^T(q)\\Q^T(q) \end{bmatrix}$ is invertible.
+
+Under this momentum transformation the system dynamics can be equivalently expressed as
+
+$$
+\begin{equation}
+\begin{bmatrix} \dot{q} \\ \dot{p_r} \end{bmatrix} = \begin{bmatrix}
+0 & Q \\
+-Q & C_r - Dr
+\end{bmatrix} \begin{bmatrix} \dfrac{\partial{H_r}}{\partial{q}}\\\dfrac{\partial{H_r}}{\partial{p}} \end{bmatrix} + \begin{bmatrix} 0  \\ G_r(q) \end{bmatrix} u\end{equation}
+$$
+
+where
+
+$$
+G_r(q) = Q^T G_p(q) \\ D_r(p_r,q) = Q^TD_p(q,p)(Q)
+ \\ C_r = Q^T\{\dfrac{\partial^T}{\partial q}
+\begin{bmatrix} MQ(Q^TMQ)^{-1}p_r\end{bmatrix}-  \dfrac{\partial}{\partial q}\begin{bmatrix} MQ(Q^TMQ)^{-1}p_r\end{bmatrix}\} Q(q) \\ M_r(q) = Q(q)^TM(q)Q(q)
+$$
+
+Note, since $Q_0$ is invertible the canonical momentum $p$ can be back-calculated from $p_r$ directly as follows:
+
+$$
+\begin{equation}
+p = Q_0^{-T}\mathbf{p} = MQ(Q^TMQ)^{-1}p_r \end{equation}
+$$
+
+Considering a situation where an impact is occurring, leading to a switch from constraint scenario **A** to constraint scenario **B,** such as a biped switching stance feet during a walking gait. To model both contact scenarios a reduced system with reduced momentum $p_r$ can be derived for the **A** and **B** contact scenarios. At the time the impact occurs, we compute the canonical momentum $p$ (momentum of the full floating base system) from $p_r^-$ using equation $(4)$ as follows:
+
+$$
+\begin{equation}p = MQ^-((Q^-)^TMQ^-)^{-1}p_r^-
+\end{equation}
+$$
+
+where $Q^- = (J_{cA}^\perp)^T$, $M$ is the mass matrix of the full floating model, $J_{cA}$ is the **A** scenario contact jacobian and $p_r^-$ is the pre-impact reduced momentum for the A scenario contact consistent dynamics.
+
+We now apply the momentum transformation $(2)$ to map $p$ into the **B** contact consistent dynamics as follows:
+
+$$
+\begin{equation}\begin{bmatrix} μ \\ p_r^+ \end{bmatrix} = \begin{bmatrix} A^T(q)\\(Q^+)^T(q) \end{bmatrix}p\end{equation}
+$$
+
+where $Q^+ = (J_{cB}^\perp)^T$, $A = J_{cB}^T$, the **B** scenario contact jacobian, and $p_r^+$ is the post-impact momentum for the B contact consistent dynamics.
+
+Ultimately, the post impact momentum $p_r^+$ can be calculated as follows:
+
+$$
+p_r^+=(Q^+)^TMQ^-((Q^-)^TMQ^{-})^{-1}p_r^-
+$$
+
+where $Q^+ = (J_{cB}^\perp)^T$,$Q^- = (J_{cA}^\perp)^T$, $M$ is the floating systems mass matrix and $p_r^-$ is the pre-impact momentum.
+
+## Energy loss
+
+This instantaneous velocity change is always associated with a kinetic energy loss:
+
+### Lagrangian form:
+
+$$
+E_{loss} = -\frac{1}{2}(\dot{q}^+-\dot{q}^-)^TM(\dot{q}^+-\dot{q}^-) = -\frac{1}{2}\Delta \dot{q}^TM\Delta \dot{q}
+$$
+
+### Hamiltonian form:
+
+$$
+E_{loss} = T^+-T^- = \dfrac{1}{2}{p^+}^TM^{-1}p^- - \dfrac{1}{2}{p^-}^TM^{-1}p^- = \dfrac{1}{2}{p^-}^TM^{-1}J_c(J_c^TM^{-1}J_c)^{-1}J_c^TM^{-1}p^-
+$$

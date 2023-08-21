@@ -1,0 +1,150 @@
+---
+title: "Dynamics"
+description: Dynamics of mechanical systems
+date: "2023-01-01"
+published: true
+---
+
+Many systems in engineering can be modeled using the differential equation, known as the state equation:
+
+$$
+\dot{x}=f(t,x,u)
+$$
+
+where $x$ is the state, $u$ is the input and $t$ is time.
+
+The output vector y is given by:
+
+$$
+y = h(t,x,u)
+$$
+
+which comprises of variables of particular interest in the analysis of the dynamical system.
+
+Without any input $u$, the state equation $\dot{x}=f(t,x)$ is referred to as an unforced state equation.
+
+Without any input $u$ or time dependence $t$ the state equation $\dot{x}=f(x)$ is referred to as autonomous.
+
+### Equilibrium points
+
+For autonomous systems with the property $f (0_{n×1})=0_{n\times1}$ the equilibrium points are the real roots of $f(x)=0$, which are points where starting at $x(0) = 0_{n×1}$ will remain there for all time.
+
+If a system has an equilibrium point at an arbitrary point $\bar{x}$ we can simply define incremental coordinates $\tilde{x} = x - \bar{x}$, allowing the system to described by $f(\tilde{x}) = \dot{\tilde{x}}$, which has an equilibrium at $\tilde{x} = 0$.
+
+### Linear Systems
+
+For linear systems, the state equation takes a very simple and special form:
+
+$$
+\dot{x}=A(t)x + B(t)u \\y=C(t)x + D(t)u
+$$
+
+where $A(t)$ is the system matrix, $B(t)$ is the input matrix, $C(t)$ is the output matrix and $D(t)$ is the feedthrough matrix.
+
+### Non-linear Systems
+
+The procedures of Euler, Langrange and Hamilton consider the motion of a particle as the solution to a variational problem, which yields the path taken by the particle between given initial and final positions. This variational approach to mechanics seeks the path that minimises a quantity known as action—an integral related to energy. With great insight, it was realised by Bernoulli, Euler, Lagrange and Gauss that the path that natures takes is the one that minimises such action. There are two such well-known principles of least action that differ subtly in assumed auxiliary conditions.
+
+## Lagrangian Form
+
+$$
+M(q)\ddot{q} + C(q,\dot{q})\dot{q} +D(q,\dot{q})\dot{q} +g(q) = G(q)u +J(q)\lambda
+$$
+
+The given Lagrangian form describes the dynamics of a mechanical system in terms of generalized coordinates and their derivatives. The equation characterizes the balance between the inertial, Coriolis, damping, and gravitational forces in the system, in relation to the control inputs and external forces. This form is particularly common in robotic manipulator dynamics.
+
+| Symbol         | Description                                                                     |
+| -------------- | ------------------------------------------------------------------------------- |
+| $q$            | Generalized coordinates                                                         |
+| $\dot{q}$      | Generalized velocity                                                            |
+| $\ddot{q}$     | Generalized acceleration                                                        |
+| $M(q)$         | Mass matrix (orthogonal)                                                        |
+| $C(q,\dot{q})$ | Coriolis matrix                                                                 |
+| $D(q,\dot{q})$ | Damping matrix                                                                  |
+| $g(q)$         | Gravitational terms                                                             |
+| $G(q)$         | Input mapping matrix                                                            |
+| $u$            | Inputs                                                                          |
+| $y$            | Outputs                                                                         |
+| $\lambda$      | External forces acting (for example from contact)                               |
+| $J(q)$         | Geometric Jacobian of location where external forces apply (at a contact point) |
+
+## Port-Hamiltonian Form
+
+PH systems are a class of non-linear dynamics with an input and output whereby the dynamics are described in terms of energy, systems interconnection and dissipation. Input-state-output port-Hamiltonian systems (ISO-PHS) are non-linear dynamics of the form:
+
+$$
+\dot{x} = [J(x)-R(x)]\nabla H + G(x)u \\ y = G^T(x)\nabla H
+$$
+
+where $x \in \R^n$ is the state of the system, $H  : \R^n \rightarrow \R$ is the Hamiltonian corresponding to the system energy, $J(x), R(x) ∈ R^{n \times n}$ are the interconnection and damping structures satisfying $J(x) = −J$ and $R(x) = R>(x) ≥ 0$, respectively, $G(x) ∈ R^{n \times n}$ is the input mapping matrix and $u, y ∈ R^{ni}$ are the input and output, respectively. In matrix form a port-Hamiltonian system can be represented as:
+
+$$
+
+\dot{x} = \begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = \begin{bmatrix}
+0_{n_q \times n_q} & I_{n_q} \\
+-I_{n_q} & -D_p(q,p)
+\end{bmatrix} \begin{bmatrix} \nabla_qH\\\nabla_pH\end{bmatrix} + \begin{bmatrix} 0_{n_q\times{n_i}} & 0_{n_q\times{n_c}} \\ G(q) & J(q) \end{bmatrix}\begin{bmatrix} u \\ F_c \end{bmatrix}
+
+
+$$
+
+$$
+\begin{bmatrix} 0 \\ y \end{bmatrix} = \begin{bmatrix} 0 &J_c^T(q) \\ 0 & G_p^T(q)\end{bmatrix} \begin{bmatrix} \nabla_qH\\\nabla_pH\end{bmatrix}
+
+
+$$
+
+| Symbol    | Description                                                                     |
+| --------- | ------------------------------------------------------------------------------- |
+| $H(q, p)$ | Hamiltonian                                                                     |
+| $q$       | Generalized coordinates                                                         |
+| $p$       | Generalized momentum                                                            |
+| $M(q)$    | Mass matrix (orthogonal)                                                        |
+| $D(q, p)$ | Damping matrix                                                                  |
+| $G(q)$    | Input mapping matrix                                                            |
+| $u$       | Inputs                                                                          |
+| $y$       | Outputs                                                                         |
+| $\lambda$ | External forces acting                                                          |
+| $J(q)$    | Geometric Jacobian of location where external forces apply (at a contact point) |
+
+### Coordinate Transformations
+
+Consider a mechanical pH system subject to physical damping, and no external constraints $F_c$, under the coordinate transformation:
+
+$$
+\mathbf{(q,p)} = \mathbf{f}(q,p) := (f_q(q),Q^T(q)p)
+$$
+
+where $f_q : \R^{n_q} \rightarrow \R^{n_q}$ is invertible and differentiable and $Q_0(q) \in \R^{n_q\times n_q}$ is full-rank for all $q$.
+
+The mechanical system can be equivalently expressed as:
+
+$$
+
+\begin{bmatrix}\mathbf{\dot{q}} \\ \mathbf{\dot{p} }\end{bmatrix} = \begin{bmatrix}
+0_{n_q \times n_q} & Q(q) \\
+-Q^\top(q) & C(q,p)-D_p(q,p)
+\end{bmatrix} \begin{bmatrix} \nabla_qH\\\nabla_pH\end{bmatrix} + \begin{bmatrix} 0 \\ G(q) \end{bmatrix}u
+
+
+$$
+
+where
+
+### Holonomic Constraints
+
+Holonomic constraints are those that can be expressed as a static relationship between configuration variables. Constraints of this form can be expressed as:
+
+$$
+f_c(q) = 0_{ch\times0}
+$$
+
+Consider the mechanical pH system with $q = col(q_i,q_d)$, where $q_i \in \R^{n_i}$ are independent coordinates and $q_d$ $\in \R^{n_q-n_i}$ are dependent coordinates, $n_i$ is the number of holonomic constraints, $n_d$ is subject to the holonomic constraints : $q_d = f_c(q_i)$
+
+The system can be written in the constraint-free form:
+
+$$
+\begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = \begin{bmatrix}		0_n & I_n \\		-I_n & 0_n	\end{bmatrix} \begin{bmatrix} \nabla_qH\\\nabla_pH\end{bmatrix} + \begin{bmatrix} 0_{n\times m} \\ G_p(q) \end{bmatrix} u\\  y = G_p^T(x)\nabla H
+$$
+
+### Non-holonomic Constraints
