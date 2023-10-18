@@ -139,36 +139,4 @@ $$
 f_c(q) = 0_{ch\times0}
 $$
 
-Consider the mechanical system \eqref{mechanical_systems} and property \eqref{port-momentum-transformation}, under the coordinate transformation \eqref{coordinate_transform}. The resulting system is equivalently expressed as
-
-    \begin{equation}\label{constraint_dynamics_eq}
-        \begin{aligned}
-            {\left[\begin{array}{c}
-                               \dot{q} \\
-                               \dot{p}
-                           \end{array}\right] } & =\left[\begin{array}{cc}
-                                                         0_n       & Q   \\
-                                                         -Q^{\top} & C-D
-                                                     \end{array}\right]\left[\begin{array}{c}
-                                                                                 \nabla_q \mathcal{H} \\
-                                                                                 \nabla_p \mathcal{H}
-                                                                             \end{array}\right]+\left[\begin{array}{c}
-                                                                                                          0_{n \times m} \\
-                                                                                                          G
-                                                                                                      \end{array}\right] u \\
-            y                       & =G^{\top} \frac{\partial \mathcal{H}}{\partial p}                                \\
-            \mathcal{H}(p, q)       & =\underbrace{\frac{1}{2} p^{\top} M^{-1} p}_{\mathcal{T}}+\mathcal{V},
-        \end{aligned}
-    \end{equation}
-    where
-    \begin{equation}\label{constraint_dynamics_eq_terms}
-        \begin{aligned}
-            G(q)    & =Q^{\top}(q) G_0(q)                                                                                              \\
-            D(p, q) & =Q^{\top}(q) D_0\left(q, p_0\right) Q(q)                                                                         \\
-            C(p, q) & =Q^{\top}(q)\left\{\frac{\partial^{\top}}{\partial q}\left[M_0 Q\left(Q^{\top} M_0 Q\right)^{-1} p\right]\right. \\
-                    & \left.\quad-\frac{\partial}{\partial q}\left[M_0 Q\left(Q^{\top} M_0 Q\right)^{-1} p\right]\right\} Q(q)         \\
-            M(q)    & =Q^{\top}(q) M_0(q) Q(q) .
-        \end{aligned}
-    \end{equation}
-
 ### Non-holonomic Constraints
