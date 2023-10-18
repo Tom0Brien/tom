@@ -4,6 +4,7 @@ import Particles from "./components/particles";
 import Terminal from './components/terminal';
 
 const navigation = [
+	{ name: "CV", href: "/cv" },
 	{ name: "Projects", href: "/projects" },
 	{ name: "Notes", href: "/notes" },
 	{ name: "Contact", href: "/contact" },
