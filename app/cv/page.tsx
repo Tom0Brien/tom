@@ -12,7 +12,7 @@ export default function Example() {
 					<div className="h-px bg-white mb-4 mt-16"></div> {/* This is the white horizontal divider */}
 					<h2 className="text-xl font-bold text-white">Thomas O'Brien</h2>
 					<div className="text-white text-xl">
-					Hardworking PhD student bringing forth a motivated attitude and a variety of technical skills, eager to pursue a career in the field of general purpose robotics. Extensive experience in developing software and hardware based systems to solve problems in both the real world and simulation.
+					Dedicated PhD student bringing forth a motivated attitude and a variety of technical skills, eager to pursue a career in the field of general purpose robotics. Extensive experience in developing software and hardware based systems to solve problems in both the real world and simulation.
 					</div>
 					<div className="text-l text-white">
 						<a href="https://github.com/Tom0Brien" target="_blank" rel="noopener noreferrer">github.com/Tom0Brien</a>
@@ -31,8 +31,8 @@ export default function Example() {
 				<div>
 					<h2 className="text-xl font-bold text-white">Education</h2>
             		<div className="h-px bg-white mb-4"></div> {/* This is the white horizontal divider */}
-					<CVEntry year="2022-" title="PhD" description="Ongoing PhD in Mechanical Engineering" location="University of Newcastle"/>
-					<CVEntry year="2018-2021" title="Bachelor (Honours)" description="Bachelor of Mechatronics Engineering (Honours)" location="University of Newcastle"/>
+					<CVEntry year="2022-" title="PhD" description="Mechanical Engineering - 'Passivity based methods for complex-robot environment interactions'" location="University of Newcastle"/>
+					<CVEntry year="2018-2021" title="Bachelor (Honours)" description="Bachelor of Mechatronics Engineering (First Class Honours)" location="University of Newcastle"/>
 				</div>
 				<div>
 					<h2 className="text-xl font-bold text-white">Teaching</h2>
