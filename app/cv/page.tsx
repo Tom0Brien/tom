@@ -52,6 +52,18 @@ export default function Example() {
 					<CVEntry year="2023" description="urdf-visualizer - A web based robot visualizer using three.js" location="github.com/Tom0Brien/urdf-visualizer" link="https://github.com/Tom0Brien/urdf-visualizer"/>
 					<CVEntry year="2023" description="NUbots codebase - Development of locomotion, localisation, state-estimation and behaviour systems for humanoid robot" location="github.com/NUbots/NUbots" link="https://github.com/NUbots/NUbots"/>
 				</div>
+				<div>
+					<h2 className="text-xl font-bold text-white">Awards and Scholarships</h2>
+            		<div className="h-px bg-white mb-4"></div> {/* This is the white horizontal divider */}
+					<CVEntry year="2017" description="College Principals Award." location="Callaghan College Jesmond"/>
+					<CVEntry year="2017" description="Principles Award of Excellence for Chemistry, Maths, Physics, Software Engineering and Engineering Studies" location="Callaghan College Jesmond"/>
+					<CVEntry year="2017" description="Vice-Chancellor’s Award for Academic Excellence in Year 12" location="University of Newcastle"/>
+					<CVEntry year="2021" description="Faculty of Engineering and Built Environment Commendation List 2018, 2019 and 2020" location="University of Newcastle"/>
+					<CVEntry year="2021" description="College Commendation List - College of EngineeringScience and Environment" location="University of Newcastle"/>
+					<CVEntry year="2022" description="Higher Degree by Research (HDR) scholarship at the University of Newcastle" location="University of Newcastle"/>
+
+
+				</div>
 				</div>
 			</div>
 		</div>
