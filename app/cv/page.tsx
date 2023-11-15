@@ -25,6 +25,7 @@ export default function Example() {
 					<h2 className="text-xl font-bold text-white">Professional Experience</h2>
 					<div className="h-px bg-white mb-4"></div> {/* This is the white horizontal divider */}
 					<CVEntry year="2020-2023" title="Robotics Researcher" description="Team leader at Newcastle Robotics Research Laboratory" location="University of Newcastle"/>
+					<CVEntry year="2023-2023" title="Research Assistant" description="Rail line detection within 3D point cloud data" location="University of Newcastle"/>
 					<CVEntry year="2021-2022" title="Mechatronics Engineer" description="Development of a drain camera system (embedded system and real-time operating system)" location="Varley"/>
 					<CVEntry year="2018-2021" title="Software Engineer" description="Design and development of websites and custom software applications" location="Enrichedhealthcare"/>
 				</div>
