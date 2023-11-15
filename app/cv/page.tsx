@@ -12,7 +12,7 @@ export default function Example() {
 					<div className="h-px bg-white mb-4 mt-16"></div> {/* This is the white horizontal divider */}
 					<h2 className="text-xl font-bold text-white">Thomas O'Brien</h2>
 					<div className="text-white text-xl">
-					Dedicated PhD student bringing forth a motivated attitude and a variety of technical skills, eager to pursue a career in the field of general purpose robotics. Extensive experience in developing software and hardware based systems to solve problems in both the real world and simulation.
+					I am an ambitious PhD student with a deep interest in general-purpose robotics. My academic and research endeavours have been centered around the development of control techniques to enable robots to interact with their environment in a safe and robust manner to achieve complex tasks. I have extensive experience in developing software and hardware for robotics applications.
 					</div>
 					<div className="text-l text-white">
 						<a href="https://github.com/Tom0Brien" target="_blank" rel="noopener noreferrer">github.com/Tom0Brien</a>
@@ -45,13 +45,7 @@ export default function Example() {
             		<div className="h-px bg-white mb-4"></div> {/* This is the white horizontal divider */}
 					<CVEntry year="2023" title="" description="Exponentially Stable Regulation of Mechanical Systems to a Path" location="IFAC2023"/>
 				</div>
-				<div>
-					<h2 className="text-xl font-bold text-white">Software</h2>
-            		<div className="h-px bg-white mb-4"></div> {/* This is the white horizontal divider */}
-					<CVEntry year="2023" description="tinyrobotics - A lightweight, fast and versatile C++ library for robotics." location="github.com/Tom0Brien/tinyrobotics" link="https://github.com/Tom0Brien/tinyrobotics"/>
-					<CVEntry year="2023" description="urdf-visualizer - A web based robot visualizer using three.js" location="github.com/Tom0Brien/urdf-visualizer" link="https://github.com/Tom0Brien/urdf-visualizer"/>
-					<CVEntry year="2023" description="NUbots codebase - Development of locomotion, localisation, state-estimation and behaviour systems for humanoid robot" location="github.com/NUbots/NUbots" link="https://github.com/NUbots/NUbots"/>
-				</div>
+
 				<div>
 					<h2 className="text-xl font-bold text-white">Awards and Scholarships</h2>
             		<div className="h-px bg-white mb-4"></div> {/* This is the white horizontal divider */}
@@ -61,8 +55,14 @@ export default function Example() {
 					<CVEntry year="2021" description="Faculty of Engineering and Built Environment Commendation List 2018, 2019 and 2020" location="University of Newcastle"/>
 					<CVEntry year="2021" description="College Commendation List - College of EngineeringScience and Environment" location="University of Newcastle"/>
 					<CVEntry year="2022" description="Higher Degree by Research (HDR) scholarship at the University of Newcastle" location="University of Newcastle"/>
+				</div>
 
-
+				<div>
+					<h2 className="text-xl font-bold text-white">Software</h2>
+            		<div className="h-px bg-white mb-4"></div> {/* This is the white horizontal divider */}
+					<CVEntry year="2023" description="tinyrobotics - A lightweight, fast and versatile C++ library for robotics." location="github.com/Tom0Brien/tinyrobotics" link="https://github.com/Tom0Brien/tinyrobotics"/>
+					<CVEntry year="2023" description="urdf-visualizer - A web based robot visualizer using three.js" location="github.com/Tom0Brien/urdf-visualizer" link="https://github.com/Tom0Brien/urdf-visualizer"/>
+					<CVEntry year="2023" description="NUbots codebase - Development of locomotion, localisation, state-estimation and behaviour systems for humanoid robot" location="github.com/NUbots/NUbots" link="https://github.com/NUbots/NUbots"/>
 				</div>
 				</div>
 			</div>
