@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/nubots.mdx",
+                "file": "projects/nubots_localisation.mdx",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "projects/nubots.mdx",
+                "file": "projects/nubots_localisation.mdx",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "projects/nubots.mdx",
+                "file": "projects/nubots_localisation.mdx",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/nubots.mdx"
+                "file": "projects/nubots_localisation.mdx"
               }
             }
           }
@@ -149,6 +149,21 @@
   },
   "active": "c669f228f9a6b203",
   "lastOpenFiles": [
+    "images/webots.png",
+    "images/visual-mesh-grid.jpg",
+    "images/vision-green-horizon-balls-detections.png",
+    "images/vision-balls-goals.png",
+    "images/spaces.png",
+    "images/resample.png",
+    "images/nusight.png",
+    "images/joints.png",
+    "images/init.png",
+    "images/fixed_base.png",
+    "images/field_line_points.png",
+    "images",
+    "projects/nubots.mdx",
+    "projects/nubots_localisation.mdx",
+    "notes/nubots_localisation.mdx",
     "notes/contact.mdx"
   ]
 }
