@@ -1,4 +1,5 @@
 [
   "edit-mdx",
-  "obsidian-plugin-prettier"
+  "obsidian-plugin-prettier",
+  "obsidian-editor-shortcuts"
 ]
