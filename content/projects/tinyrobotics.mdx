@@ -81,7 +81,7 @@ sudo make install # copies files in the include folder to /usr/local/include*
 The code below demonstrates how to generate a model via a URDF and use kinematics and dynamics functions.
 Numerous other examples are provided in the `examples` folder.
 
-```c++
+```cpp
 // Parse URDF
 const int n_joints      = 5;
 auto model              = import_urdf<double, n_joints>("5_link.urdf");
