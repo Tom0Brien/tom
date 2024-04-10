@@ -8,13 +8,13 @@
         "type": "tabs",
         "children": [
           {
-            "id": "c669f228f9a6b203",
+            "id": "09c45e44fbcbf436",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "projects/nubots_localisation.mdx",
-                "mode": "source",
+                "file": "notes/dynamics.mdx",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "projects/nubots_localisation.mdx",
+                "file": "notes/dynamics.mdx",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "projects/nubots_localisation.mdx",
+                "file": "notes/dynamics.mdx",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "projects/nubots_localisation.mdx"
+                "file": "notes/dynamics.mdx"
               }
             }
           }
@@ -147,8 +147,20 @@
       "edit-mdx:New .mdx file": false
     }
   },
-  "active": "c669f228f9a6b203",
+  "active": "09c45e44fbcbf436",
   "lastOpenFiles": [
+    "notes/contact.mdx",
+    "projects/nubots_localisation.mdx",
+    "projects/nubots_kinematics.mdx",
+    "projects/nubots.mdx",
+    "notes/dynamics.mdx",
+    "notes/kinematics.mdx",
+    "notes/projects/urdf-visualizer.mdx",
+    "notes/projects/tinyrobotics.mdx",
+    "notes/projects/tinyode.mdx",
+    "notes/projects/passive_nlmpc.mdx",
+    "notes/projects/nubots_walk_engine.mdx",
+    "images/yolo.png",
     "images/webots.png",
     "images/visual-mesh-grid.jpg",
     "images/vision-green-horizon-balls-detections.png",
@@ -158,12 +170,7 @@
     "images/nusight.png",
     "images/joints.png",
     "images/init.png",
-    "images/fixed_base.png",
-    "images/field_line_points.png",
-    "images",
-    "projects/nubots.mdx",
-    "projects/nubots_localisation.mdx",
-    "notes/nubots_localisation.mdx",
-    "notes/contact.mdx"
+    "Excalidraw/Drawing 2024-03-21 11.41.01.excalidraw.md",
+    "Untitled.md"
   ]
 }

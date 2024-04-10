@@ -5,13 +5,19 @@ date: "2023-01-01"
 published: true
 ---
 
-Many systems in engineering can be modeled using the differential equation, known as the state equation:
+# Dynamical Systems
+
+Many systems in engineering can be modeled using the differential equation, known as the state equation.
 
 $$
 \dot{x}=f(t,x,u)
 $$
 
-where $x$ is the state, $u$ is the input and $t$ is time.
+| Symbol | Description | Dimension    |
+| ------ | ----------- | ------------ |
+| $t$    | Time        | $1 \times 1$ |
+| $x$    | State       | $n \times 1$ |
+| $u$    | Input       | $m \times 1$ |
 
 The output vector y is given by:
 
@@ -21,122 +27,250 @@ $$
 
 which comprises of variables of particular interest in the analysis of the dynamical system.
 
-Without any input $u$, the state equation $\dot{x}=f(t,x)$ is referred to as an unforced state equation.
+There exists variations of the state equation:
 
-Without any input $u$ or time dependence $t$ the state equation $\dot{x}=f(x)$ is referred to as autonomous.
+| Variation  | Equation         | Description                  |
+| ---------- | ---------------- | ---------------------------- |
+| Unforced   | $\dot{x}=f(t,x)$ | No inputs                    |
+| Autonomous | $\dot{x}=f(x)$   | No inputs or time dependence |
 
-### Equilibrium points
+# Linear Mechanical Systems
 
-For autonomous systems with the property $f (0_{n×1})=0_{n\times1}$ the equilibrium points are the real roots of $f(x)=0$, which are points where starting at $x(0) = 0_{n×1}$ will remain there for all time.
-
-If a system has an equilibrium point at an arbitrary point $\bar{x}$ we can simply define incremental coordinates $\tilde{x} = x - \bar{x}$, allowing the system to described by $f(\tilde{x}) = \dot{\tilde{x}}$, which has an equilibrium at $\tilde{x} = 0$.
-
-### Linear Systems
-
-For linear systems, the state equation takes a very simple and special form:
+Simple mechanical systems can be expressed as linear systems, where the state equation takes the very simple and special form
 
 $$
-\dot{x}=A(t)x + B(t)u \\y=C(t)x + D(t)u
+\begin{aligned}
+\dot{x}=Ax + Bu \\
+y=Cx
+\end{aligned}
 $$
 
-where $A(t)$ is the system matrix, $B(t)$ is the input matrix, $C(t)$ is the output matrix and $D(t)$ is the feedthrough matrix.
+| Symbol | Description             | Dimension        |
+| ------ | ----------------------- | ---------------- |
+| $x$    | State                   | $n_x \times 1$   |
+| $u$    | Input                   | $n_u \times 1$   |
+| $y$    | Output                  | $n_y \times 1$   |
+| $A$    | State transition matrix | $n_x \times n_x$ |
+| $B$    | Input mapping matrix    | $n_x \times m$   |
+| $C$    | Output mapping matrix   | $n_y \times n_x$ |
 
-### Non-linear Systems
+# Non-linear Mechanical Systems
 
-The procedures of Euler, Langrange and Hamilton consider the motion of a particle as the solution to a variational problem, which yields the path taken by the particle between given initial and final positions. This variational approach to mechanics seeks the path that minimises a quantity known as action—an integral related to energy. With great insight, it was realised by Bernoulli, Euler, Lagrange and Gauss that the path that natures takes is the one that minimises such action. There are two such well-known principles of least action that differ subtly in assumed auxiliary conditions.
+## Lagrangian Dynamics
 
-## Lagrangian Form
+Lagrangian dynamics describe mechanical systems in terms of generalized coordinates and their derivatives
 
 $$
 M(q)\ddot{q} + C(q,\dot{q})\dot{q} +D(q,\dot{q})\dot{q} +g(q) = G(q)u +J(q)\lambda
 $$
 
-The given Lagrangian form describes the dynamics of a mechanical system in terms of generalized coordinates and their derivatives. The equation characterizes the balance between the inertial, Coriolis, damping, and gravitational forces in the system, in relation to the control inputs and external forces. This form is particularly common in robotic manipulator dynamics.
-
-| Symbol         | Description                                                                     |
-| -------------- | ------------------------------------------------------------------------------- |
-| $q$            | Generalized coordinates                                                         |
-| $\dot{q}$      | Generalized velocity                                                            |
-| $\ddot{q}$     | Generalized acceleration                                                        |
-| $M(q)$         | Mass matrix (orthogonal)                                                        |
-| $C(q,\dot{q})$ | Coriolis matrix                                                                 |
-| $D(q,\dot{q})$ | Damping matrix                                                                  |
-| $g(q)$         | Gravitational terms                                                             |
-| $G(q)$         | Input mapping matrix                                                            |
-| $u$            | Inputs                                                                          |
-| $y$            | Outputs                                                                         |
-| $\lambda$      | External forces acting (for example from contact)                               |
-| $J(q)$         | Geometric Jacobian of location where external forces apply (at a contact point) |
-
-## Port-Hamiltonian Form
-
-PH systems are a class of non-linear dynamics with an input and output whereby the dynamics are described in terms of energy, systems interconnection and dissipation. Input-state-output port-Hamiltonian systems (ISO-PHS) are non-linear dynamics of the form:
+or in state representation
 
 $$
-\dot{x} = [J(x)-R(x)]\nabla H + G(x)u \\ y = G^T(x)\nabla H
+\dot{x} = \begin{bmatrix} \dot{q} \\ \ddot{q} \end{bmatrix} =\left[\begin{array}{c} \dot{q} \\ M^{-1}(q)\left[G(q)u + J(q)\lambda - C(q, \dot{q})\dot{q} - D(q, \dot{q})\dot{q} - g(q)\right] \end{array}\right]
 $$
 
-where $x \in \R^n$ is the state of the system, $H  : \R^n \rightarrow \R$ is the Hamiltonian corresponding to the system energy, $J(x), R(x) ∈ R^{n \times n}$ are the interconnection and damping structures satisfying $J(x) = −J$ and $R(x) = R>(x) ≥ 0$, respectively, $G(x) ∈ R^{n \times n}$ is the input mapping matrix and $u, y ∈ R^{ni}$ are the input and output, respectively. In matrix form a port-Hamiltonian system can be represented as:
+| Symbol         | Description              | Dimension        | Properties                               |
+| -------------- | ------------------------ | ---------------- | ---------------------------------------- |
+| $q$            | Generalized coordinates  | $n_q \times 1$   |                                          |
+| $\dot{q}$      | Generalized velocity     | $n_q \times 1$   |                                          |
+| $\ddot{q}$     | Generalized acceleration | $n_q \times 1$   |                                          |
+| $x$            | State                    | $n_x \times 1$   | $x = [q; \dot{q}]$, $n_x = 2 \times n_q$ |
+| $u$            | Inputs                   | $n_q \times 1$   |                                          |
+| $y$            | Outputs                  | $n_q \times 1$   |                                          |
+| $M(q)$         | Mass matrix              | $n_q \times n_q$ | orthogonal                               |
+| $C(q,\dot{q})$ | Coriolis matrix          | $n_q \times n_q$ |                                          |
+| $D(q,\dot{q})$ | Damping matrix           | $n_q \times n_q$ |                                          |
+| $g(q)$         | Gravitational terms      | $n_q \times 1$   |                                          |
+| $G(q)$         | Input mapping matrix     | $n_q \times n_u$ |                                          |
+| $J_c(q)$       | Constraint jacobian      | $n_q \times n_c$ |                                          |
+| $\lambda$      | External forces          | $n_c \times 1$   |                                          |
+
+## port-Hamiltonian Dynamics
+
+port-Hamiltonian (pH) dynamics describe mechanical systems in terms of generalized coordinates and generalized momenta
 
 $$
-
-\dot{x} = \begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = \begin{bmatrix}
+\begin{aligned}
+&\dot{x} = \begin{bmatrix} \dot{q} \\ \dot{p} \end{bmatrix} = \begin{bmatrix}
 0_{n_q \times n_q} & I_{n_q} \\
--I_{n_q} & -D_p(q,p)
-\end{bmatrix} \begin{bmatrix} \nabla_qH\\\nabla_pH\end{bmatrix} + \begin{bmatrix} 0_{n_q\times{n_i}} & 0_{n_q\times{n_c}} \\ G(q) & J(q) \end{bmatrix}\begin{bmatrix} u \\ F_c \end{bmatrix}
+-I_{n_q} & -D(q,p)
+\end{bmatrix} \begin{bmatrix} \nabla_qH\\\nabla_pH\end{bmatrix} + \begin{bmatrix} 0_{n_q\times{n_u}} & 0_{n_q\times{n_c}} \\ G(q) & J(q) \end{bmatrix}\begin{bmatrix} u \\ \lambda \end{bmatrix} \\
 
-
+&{H}(q, p)=\frac{1}{2} p^{\top} M^{-1}(q) p+V(q)
+\end{aligned}
 $$
 
-$$
-\begin{bmatrix} 0 \\ y \end{bmatrix} = \begin{bmatrix} 0 &J_c^T(q) \\ 0 & G_p^T(q)\end{bmatrix} \begin{bmatrix} \nabla_qH\\\nabla_pH\end{bmatrix}
-
-
-$$
-
-| Symbol    | Description                                                                     |
-| --------- | ------------------------------------------------------------------------------- |
-| $H(q, p)$ | Hamiltonian                                                                     |
-| $q$       | Generalized coordinates                                                         |
-| $p$       | Generalized momentum                                                            |
-| $M(q)$    | Mass matrix (orthogonal)                                                        |
-| $D(q, p)$ | Damping matrix                                                                  |
-| $G(q)$    | Input mapping matrix                                                            |
-| $u$       | Inputs                                                                          |
-| $y$       | Outputs                                                                         |
-| $\lambda$ | External forces acting                                                          |
-| $J(q)$    | Geometric Jacobian of location where external forces apply (at a contact point) |
+| Symbol    | Description                       | Dimension        | Properties  |
+| --------- | --------------------------------- | ---------------- | ----------- |
+| $q$       | Generalized coordinates           | $n_q \times 1$   |             |
+| $p$       | Generalized momentum              | $n_q \times 1$   |             |
+| $x$       | State                             | $n_x \times 1$   | $x = [q;p]$ |
+| $u$       | Inputs                            | $n_u \times 1$   |             |
+| $y$       | Outputs                           | $n_y \times 1$   |             |
+| $H(x)$    | Hamiltonian (total system energy) | $1 \times 1$     |             |
+| $G(q)$    | Input mapping matrix              | $n_q \times n_u$ |             |
+| $D(q,p)$  | Damping matrix                    | $n_q \times n_q$ |             |
+| $\lambda$ | External forces acting            | $n_c \times 1$   |             |
+| $J_c(q)$  | Constraint jacobian               | $n_q \times n_c$ |             |
 
 ### Coordinate Transformations
 
-Consider a mechanical pH system subject to physical damping, and no external constraints $F_c$, under the coordinate transformation:
+Consider a mechanical pH system subject to physical damping, and no external constraints, under the coordinate transformation
 
 $$
 \mathbf{(q,p)} = \mathbf{f}(q,p) := (f_q(q),Q^T(q)p)
 $$
 
-where $f_q : \R^{n_q} \rightarrow \R^{n_q}$ is invertible and differentiable and $Q_0(q) \in \R^{n_q\times n_q}$ is full-rank for all $q$.
+where $f_q : \mathbb{R}^{n_q} \rightarrow \mathbb{R}^{n_q}$ is invertible and differentiable and $Q_0(q) \in \mathbb{R}^{n_q\times n_q}$ is full-rank for all $q$.
 
-The mechanical system can be equivalently expressed as:
+The pH system can be equivalently expressed as
 
 $$
-
 \begin{bmatrix}\mathbf{\dot{q}} \\ \mathbf{\dot{p} }\end{bmatrix} = \begin{bmatrix}
-0_{n_q \times n_q} & Q(q) \\
--Q^\top(q) & C(q,p)-D_p(q,p)
+0_{n_q \times n_q} & \mathbf{Q}(q) \\
+-\mathbf{Q}^\top(q) & \mathbf{C}(q,p)-\mathbf{D}(q,p)
 \end{bmatrix} \begin{bmatrix} \nabla_qH\\\nabla_pH\end{bmatrix} + \begin{bmatrix} 0 \\ G(q) \end{bmatrix}u
-
-
 $$
 
 where
 
-### Holonomic Constraints
+$$
+\begin{aligned}
+\mathbf{Q}(\mathbf{q}) & =\left.\frac{\partial}{\partial q}\left(f_{\mathbf{q}}\right) Q_0\right|_{q=f_{\mathbf{q}}^{-1}(\mathbf{q})} \\
+\mathbf{D}(\mathbf{q}, \mathbf{p}) & =\left.Q_0^{\top} D Q_0\right|_{q=f_{\mathbf{q}}^{-1}(\mathbf{q})} \\
+\mathbf{C}(\mathbf{q}, \mathbf{p}) & =\left.Q_0^{\top}(q)\left\{\frac{\partial^{\top}}{\partial q}\left[Q_0^{-\top}(q) \mathbf{p}\right]-\frac{\partial}{\partial q}\left[Q_0^{-\top}(q) \mathbf{p}\right]\right\} Q_0(q)\right|_{q=f_{\mathbf{q}}^{-1}(\mathbf{q})} \\
+\mathbf{M}(\mathbf{q}) & =\left.Q_0^{\top}(q) M(q) Q_0(q)\right|_{q=f_{\mathbf{q}}^{-1}(\mathbf{q})} \\
+\mathbf{G}(\mathbf{q}) & =\left.Q_0^{\top}(q) G_p(q)\right|_{q=f_{\mathbf{q}}^{-1}(\mathbf{q})} \\
+\mathbf{V}(\mathbf{q}) & =\left.V(q)\right|_{q=f_{\mathbf{q}}^{-1}(\mathbf{q})} .
+\end{aligned}
+$$
 
-Holonomic constraints are those that can be expressed as a static relationship between configuration variables. Constraints of this form can be expressed as:
+## Constraints
+
+**Holonomic** constraints are expressed as a static relationship between configuration variables expressed as
 
 $$
-f_c(q) = 0_{ch\times0}
+f_c(q) = 0_{n_c\times1}
 $$
 
-### Non-holonomic Constraints
+**Nonholomic constraints** are expressed as a non-integrable, linear combination of generalised velocities. An important class are called nonholonomic Pfaffian constraints
+
+$$
+J_c^{\top}(q) \dot{q}=0_{n_c \times 1},
+$$
+
+_Note_ Holonomic constraints can also be expressed as Pfaffian constraints by simply taking the time derivative
+
+### Eliminating holonomic constraints (pH)
+
+Holonomic constraints can be eliminated from the dynamics equations of motion via the appropriate selection of generalised coordinates.
+
+Consider the mechanical pH system with $q=\operatorname{col}(\hat{q}, \mathfrak{q}), \hat{q} \in \mathbb{R}^{n_q-n_c}$ and $\mathfrak{q} \in \mathbb{R}^{n_c}$, subject to the holonomic constraint
+
+$$
+\mathfrak{q}=f_c(\hat{q}) .
+$$
+
+The system can be written in the constraint-free form
+
+$$
+\begin{aligned}
+{\left[\begin{array}{c}
+\dot{\hat{q}} \\
+\dot{\hat{p}}
+\end{array}\right] } & =\left[\begin{array}{cc}
+0_{\left(n_q-n_c\right) \times\left(n_q-n_c\right)} & I_{n_q-n_c} \\
+-I_{n_q-n_c} & -\hat{D}(\hat{q}, \hat{p})
+\end{array}\right]\left[\begin{array}{c}
+\nabla_{\hat{q}} \hat{H} \\
+\nabla_{\hat{p}} \hat{H}
+\end{array}\right]+\left[\begin{array}{c}
+0_{\left(n_q-n_c\right) \times n_u} \\
+\hat{G}(\hat{q})
+\end{array}\right] u \\
+y & =\hat{G}^{\top}(\hat{q}) \nabla_{\hat{p}} \hat{H} \\
+\hat{H}(\hat{q}, \hat{p}) & =\frac{1}{2} \hat{p}^{\top} \hat{M}^{-1}(\hat{q}) \hat{p}+\hat{V}(\hat{q}),
+\end{aligned}
+$$
+
+where
+
+$$
+\begin{aligned}
+\hat{p}(\hat{q}, p) & =\left.\left[\begin{array}{ll}
+I_{n_q-n_c} & \frac{\partial^{\top} f_c}{\partial \hat{q}}
+\end{array}\right] p\right|_{\mathfrak{q}=f_c(\hat{q})} \\
+\hat{M}(\hat{q}) & =\left.\left[\begin{array}{ll}
+I_{n_q-n_c} & \frac{\partial^{\top} f_c}{\partial \hat{q}}
+\end{array}\right] M\right|_{\mathfrak{q}=f_c(\hat{q})}\left[\begin{array}{c}
+I_{n_q-n_c} \\
+\frac{\partial f_c}{\partial \hat{q}}
+\end{array}\right] \\
+\hat{D}(\hat{q}, \hat{p}) & =\left.\left[\begin{array}{ll}
+I_{n_q-n_c} & \frac{\partial^{\top} f_c}{\partial \hat{q}}
+\end{array}\right] D\right|_{\mathfrak{q}=f_c(\hat{q})}\left[\begin{array}{c}
+I_{n_q-n_c} \\
+\frac{\partial f_c}{\partial \hat{q}}
+\end{array}\right] \\
+\hat{G}(\hat{q}) & =\left.\left[\begin{array}{ll}
+I_{n_q-n_c} & \frac{\partial^{\top} f_c}{\partial \hat{q}}
+\end{array}\right] G_p\right|_{\mathfrak{q}=f_c(\hat{q})} .
+\end{aligned}
+$$
+
+### Eliminating nonholonomic constraints (pH)
+
+Non holonomic constraints can be elimiated from a pH mechanical system by applying the momentum transform
+
+$$
+\tilde{p}=\left[\begin{array}{c}
+\mu_s \\
+p_r
+\end{array}\right]=\underbrace{\left[\begin{array}{c}
+J_c^{\top}(q) \\
+J_c^{\perp}(q)
+\end{array}\right]}_{:=Q(q)} p_0
+$$
+
+obtaining reduced-order model
+
+$$
+\begin{aligned}
+	\begin{bmatrix}
+            \dot{q} \\
+            \dot{p}_s
+        \end{bmatrix}
+        =&
+\left[\begin{array}{cc}
+0_n & J_c^{\perp\top}(q) \\
+-J_c^{\perp}(q)& C_s(p_r, q)
+\end{array}\right]
+\left[\begin{array}{c}
+\nabla_q H_r \\
+\nabla_{p_r} H_r
+\end{array}\right] +
+\left[\begin{array}{c}
+0_{n \times m} \\
+G_s(q)
+\end{array}\right] u\\
+            &H_r(p_r, q)        =\frac{1}{2} p_r^{\top} M_s^{-1}(q) p_r+\mathcal{V}(q),
+        \end{aligned}
+$$
+
+where
+
+$$
+\begin{aligned}
+	G_s(q)    & =J_c^{\perp}(q) G_0(q)\\
+	C_s(p_r, q) & =J_c^{\perp}(q)\left\{\frac{\partial^{\top}}{\partial q}\left[M_0(q) J_c^{\perp\top}(q)M_s^{-1}(q) p_r\right]\right. \\
+			& \left.\quad-\frac{\partial}{\partial q}\left[M_0(q)  J_c^{\perp\top}(q) M_s^{-1}(q) p_r\right]\right\} J_c^{\perp\top}(q)  \\&- J_c^{\perp}(q) D_0\left(q, p_0\right) J_c^{\perp\top}(q)       \\
+	M_s(q)    & =J_c^{\perp}(q) M_0(q) J_c^{\perp\top}(q)
+\end{aligned}
+$$
+
+_Note: _ Generalized momentum vector $p$ can be recovered by the expression
+
+$$
+p = M_0(q)J_c^{\perp\top}(q)M_s^{-1}(q)p_r.
+$$

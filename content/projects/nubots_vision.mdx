@@ -1,0 +1,23 @@
+---
+title: "Robocup computer vision"
+description: Yolov8 object detection
+url: https://nubook.nubots.net/
+repository: NUbots/NUbots
+date: "2023-01-01"
+published: true
+---
+
+A vision module for detecting and estimating the Cartesian position of the following objects:
+
+- Balls
+- Goals
+- Robots
+- Field Intersections (X, L, T)
+
+Trained using the Torso21 data set (https://github.com/bit-bots/TORSO_21_dataset) and YoloV8 https://github.com/ultralytics/ultralytics
+
+Inference is achieved at 100 fps on GPU onboard an intel NUC using https://github.com/openvinotoolkit/openvino which is optimized for intel hardware.
+
+Example results:
+
+![yolo](/images/yolo.png "Yolov8 inference results")
