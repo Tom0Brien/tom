@@ -221,7 +221,7 @@ $$
 
 ### Eliminating nonholonomic constraints (pH)
 
-Non holonomic constraints can be elimiated from a pH mechanical system by applying the momentum transform
+Nonholonomic constraints can be elimiated from a pH mechanical system by applying the momentum transform
 
 $$
 \tilde{p}=\left[\begin{array}{c}
@@ -273,4 +273,34 @@ _Note_ Generalized momentum vector $p$ can be recovered by the expression
 
 $$
 p = M_0(q)J_c^{\perp\top}(q)M_s^{-1}(q)p_r.
+$$
+
+### Eliminating nonholonomic constraints (Lagrangian)
+
+Let us begin with the widely used Lagrange-d'Alembert equations
+
+$$
+\frac{\mathrm{d}}{\mathrm{d} t}\left(\frac{\partial L}{\partial \dot{{q}}}\right)^{\mathrm{T}}-\left(\frac{\partial L}{\partial {q}}\right)^{\mathrm{T}}={F}_{\text {ext }}+ J_c{\lambda},
+$$
+
+which describe the dynamics of systems subject to $k$ nonholonomic (Pfaffian) constraints of the form
+
+$$
+J_c^\top \dot{{q}}={0} .
+$$
+
+The matrix form of is given as
+
+$$
+{M}(q) \ddot{{q}}+{C}(q) \dot{{q}}+g(q)=G(q)u+ J_c\lambda
+$$
+
+Due to the nonholonomic constraints, the admissible velocitie must be of the form
+
+$$
+ \dot{q} = S\dot{q}_r
+$$
+
+$$
+{M} \dot{q_r}+{C} q_r+{S}^{\mathrm{T}} \nabla_{{q}} V=\boldsymbol{\tau}+{J} q_r
 $$
