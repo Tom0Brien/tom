@@ -1,10 +1,11 @@
 ---
 title: "Onshape to URDF pipeline"
-description:
+description: A pipeline to generate URDF file of NUgus robot from Onshape.
 url: https://nubook.nubots.net/
 repository: NUbots/NUbots
 date: "2023-01-01"
 published: true
+media: /images/urdf.mp4
 ---
 
 For humanoid robotics, an accurate kinematic model of the robot is critical for control and estimation purposes. A very common file format to represent a robot is a URDF file (http://wiki.ros.org/urdf). Creating a URDF file by hand is possible, but very tedious and prone to mistakes. A good approach is to use a CAD tool which can generate a URDF file problematically.
@@ -19,3 +20,5 @@ The generated URDF file can be found here https://github.com/NUbots/NUgus.
 
 With a URDF, file the NUgus platform can be used in various robotic simulators such as Gazebo, MuJoCo or Webots as shown below.
 ![Webots](/images/webots_urdf.png "Webots")
+
+The generated URDF file is used for forward and inverse kinematics, dynamics, and control algorithms leveraging the tinyrobotics library which can be here [NUbots](/projects/tinyrobotics)

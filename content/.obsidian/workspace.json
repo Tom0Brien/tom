@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "notes/Untitled.mdx",
+                "file": "projects/nubots_vision.mdx",
                 "mode": "source",
                 "source": false
               }
@@ -85,7 +85,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "notes/Untitled.mdx",
+                "file": "projects/nubots_vision.mdx",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -102,7 +102,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "notes/Untitled.mdx",
+                "file": "projects/nubots_vision.mdx",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -125,7 +125,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "notes/Untitled.mdx"
+                "file": "projects/nubots_vision.mdx"
               }
             }
           }
@@ -150,6 +150,9 @@
   },
   "active": "09c45e44fbcbf436",
   "lastOpenFiles": [
+    "projects/nubots_state_estimation.mdx",
+    "projects/nubots_MTT.mdx",
+    "projects/nubots_localisation.mdx",
     "Excalidraw/Hybrid.excalidraw",
     "notes/Untitled.mdx",
     "Excalidraw/Drawing 2024-04-28 12.05.20.excalidraw.md",
@@ -160,8 +163,6 @@
     "projects/nubots.mdx",
     "notes/contact.mdx",
     "projects/nubots_vision.mdx",
-    "projects/nubots_state_estimation.mdx",
-    "projects/nubots_MTT.mdx",
     "images/yolo.png",
     "images/webots.png",
     "images/visual-mesh-grid.jpg",
