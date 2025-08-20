@@ -9,8 +9,8 @@ type Props = {
 
 export const Article: React.FC<Props> = ({ project }) => {
   return (
-    <Link href={`/projects/${project.slug}`}>
-      <article className="p-4 md:p-8">
+    <Link href={`/projects/${project.slug}`} className="block w-full h-full">
+      <div className="p-4 md:p-8">
         <div className="flex justify-between gap-2 items-center">
           <span className="text-xs duration-1000 text-zinc-200 group-hover:text-white group-hover:border-zinc-200 drop-shadow-orange">
             {project.date ? (
@@ -87,7 +87,7 @@ export const Article: React.FC<Props> = ({ project }) => {
             </span>
           </div>
         )}
-      </article>
+      </div>
     </Link>
   );
 };
