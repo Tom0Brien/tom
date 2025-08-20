@@ -7,3 +7,135 @@ date: "2024-11-11"
 published: true
 media: /images/odometry.mp4
 ---
+
+# Humanoid State Estimation in RoboCup
+
+This work presents a comprehensive pipeline for kinematic state estimation of humanoid robots in the RoboCup competition. The dynamic and sensor-limited environment of RoboCup poses significant challenges for accurate state estimation, including unstable walking surfaces, frequent collisions, and restrictions on external sensing modalities like LiDAR and GPS.
+
+## Introduction
+
+For a humanoid robot, locomotion involves controlling the unactuated floating base to a desired location in the world. Before a control action can be applied, an accurate estimate of the position and orientation of the floating base is required. In the context of RoboCup, the artificial grass surface and collisions with other robots complicates stable walking, making state estimation challenging due to falls, noise and drift over time.
+
+Kinematic state estimation in RoboCup can be broken down into two major areas:
+- **Odometry**: Estimation of the robot's pose with respect to an inertial world frame
+- **Localization**: Estimation of the robot's pose with respect to the soccer field frame
+
+## Odometry
+
+Since the contact configuration of a robot during walking is always changing, we construct a representation of the system in a general World-fixed inertial frame. We consider two reference frames: World-fixed inertial frame attached to the ground and body-fixed frame rigidly attached to the robot midway between the robot's hip yaw joints.
+
+The homogeneous transformation matrix capturing the relationship between these frames is given by:
+
+$$
+H^f_b = H^f_w(x) × H^w_b
+$$
+
+where $R_b^w$ is the rotation matrix from the body frame to the world frame, and $r_{B/W}^w$ is the position vector of the body frame with respect to the world frame.
+
+To estimate the orientation of the floating base body frame, we use the **Mahony Filter**, a simple and efficient approach for real-time attitude estimation. The Mahony filter has only two tuning parameters, the PI compensator gains $K_p$ and $K_i$, making the tuning process straightforward.
+
+For floating base translation estimation, we use the **anchor point strategy**. We select an anchor point $A$, located on the robot's foot sole and assume that this point is grounded at position $r_{A/W}^{W}$ in the world frame whenever it serves as the support foot. In the floating-base frame, the position $r_{A/B}^{B}$ of this anchor point is known through forward kinematics allowing continuous tracking of the floating base translation relative to the world frame.
+
+## Visual Landmark Detection
+
+Our localization approach relies on visual landmarks detected using two computer vision methods:
+
+- **YOLOv8n**: State-of-the-art real-time object detection for identifying objects and key landmarks
+- **Visual Mesh**: Highly efficient semantic segmentation network specifically tuned for detecting field lines
+
+The landmarks include YOLOv8n-detected goal posts, T, L, and X intersections, and field line points detected by the Visual Mesh.
+
+Without loss of generality, through a combination of our camera model and the extrinsic matrix $H_{body}^c$, the pixel-based detections can be projected onto the field plane. A detection in world space $\hat{r}^w_{O/world}$ is given by:
+
+$$
+r̂^w_{O/W} = (e_3^T r^w_{C/W}) / (e_3^T (R^w_c u^c_{O/C})) × R^w_c u^c_{O/C} + r^w_{C/W}
+$$
+
+where $u^c_{O/C}$ is the unit vector associated with a pixel obtained through our camera model, $r^w_{C/world}$ is the position of the camera in the world frame, $R^w_c$ is the rotation matrix from the camera frame to the world frame, and $e_3$ is the basis vector $[0, 0, 1]^T$.
+
+### Performance Benchmarks
+
+| Method | Simulation (i7-11850H) | Robot (i7-1260P) |
+|--------|------------------------|-------------------|
+| YOLOv8n | 47 FPS | 66 FPS |
+| Visual Mesh | 152 FPS | 259 FPS |
+
+## Localization
+
+The localization problem can be formulated as estimating the pose of the field relative to the world frame. Due to the flat nature of the soccer field, this can be fully described by the transformation matrix:
+
+$$
+H_w^f(x) = \begin{bmatrix}
+\cos(\theta) & -\sin(\theta) & 0 & x \\
+\sin(\theta) & \cos(\theta) & 0 & y \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1
+\end{bmatrix}
+$$
+
+where $\mathbf{x} = [x, y, \theta]^T$ is a vector containing the x-y translation and yaw rotation.
+
+We propose a localization method leveraging **nonlinear optimization** to compute the optimal state $\mathbf{x}$ in real-time. Our framework employs the derivative-free algorithm **COBYLA** (Constrained Optimization BY Linear Approximations), integrating multiple cost components and constraints.
+
+The optimization problem is given by:
+
+$$
+\begin{aligned}
+\mathbf{x}^* &= \underset{\mathbf{x}}{\arg\min} \, J(\mathbf{x}) \\
+\text{s.t.} \quad &\mathbf{x}_{\min} \leq \mathbf{x} \leq \mathbf{x}_{\max}
+\end{aligned}
+$$
+
+where $\mathbf{x}_{min}, \mathbf{x}_{max}$ are the lower and upper bounds on the state vector $\mathbf{x}$.
+
+### Cost Function Components
+
+The overall cost function $J(\mathbf{x})$ is defined as:
+
+$$
+J(\mathbf{x}) = w_{fl} × J_{fl}(\mathbf{x}) + w_{lm} × J_{lm}(\mathbf{x}) + w_{sc} × J_{sc}(\mathbf{x})
+$$
+
+1. **Field Line Alignment Cost** $J_{fl}(\mathbf{x})$: Measures how well the observed field line points align with actual field lines:
+
+$$
+J_{fl}(\mathbf{x}) = \sum_{i=1}^{N_{fl}} d_{map}(H_w^f(\mathbf{x}) \hat{\mathbf{r}}^w_i)^2
+$$
+
+where $N_{fl}$ is the number of observed field line points, $\hat{r}^w_i$ represents the $i$-th field line point in the world frame, transformed into the field frame via $H_w^f(\mathbf{x})^{-1}$, and $d_{map}$ is a function which provides the distance to the nearest field line using a precomputed distance map.
+
+2. **Landmark Cost** $J_{lm}(\mathbf{x})$: Assesses the alignment of observed field line intersections and goal posts with known positions:
+
+$$
+J_{lm}(\mathbf{x}) = \sum_{i=1}^{N_{lm}} \left\|\mathbf{r}^f_i - H_w^f(\mathbf{x}) \hat{\mathbf{r}}^w_i\right\|^2
+$$
+
+where $N_{lm}$ is the number of associated landmarks, $r^f_i$ is the known position of the $i$-th landmark in the field frame, and $\hat{r}^w_i$ is the observed position of the $i$-th landmark in the world frame.
+
+3. **State Change Cost** $J_{sc}(\mathbf{x})$: Penalizes significant deviations from the prior state estimate:
+
+$$
+J_sc(x) = ||x - x_0||^2
+$$
+
+where $\mathbf{x}_0$ is the prior state estimate (initial guess).
+
+### Results
+
+After each optimization step, the solution $\mathbf{x}$ is filtered using a standard Kalman filter to smooth state estimates over time. Our method achieves the lowest RMSE errors compared to other approaches:
+
+| Method | x [m] | y [m] | yaw [deg] |
+|--------|-------|-------|-----------|
+| Particle Filter | 0.0563 | 0.0890 | 1.6180 |
+| NLopt (field lines only) | 0.0503 | 0.0563 | 0.8389 |
+| NLopt (all cost terms) | **0.0500** | **0.0559** | **0.8273** |
+
+On average, the optimization routine and filtering step take only **2 milliseconds** to complete, making it suitable for real-time applications on resource-constrained humanoid robot hardware.
+
+## Key Contributions
+
+- **Integrated odometry approach** combining Mahony filter with anchor point strategy
+- **Real-time visual landmark detection** using YOLOv8n and Visual Mesh
+- **Novel nonlinear optimization framework** for localization with multiple cost terms
+- **Efficient implementation** achieving sub-5ms computation time
+- **Robust performance** in challenging RoboCup environments with limited sensors
