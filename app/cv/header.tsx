@@ -74,14 +74,14 @@ export const Header: React.FC = ({}) => {
             <div className="grid grid-cols-1 gap-y-6 gap-x-8 text-base font-semibold leading-7 text-white sm:grid-cols-2 md:flex lg:gap-x-10">
               <Link
                 target="_blank"
-                key={"Github"}
+                key={"github-link"}
                 href={"https://github.com/Tom0Brien"}
               >
                 {"github.com/Tom0Brien "}
               </Link>
               <Link
                 target="_blank"
-                key={"Github"}
+                key={"email-link"}
                 href={"mailto:thomas16441@gmail.com"}
               >
                 {"thomas16441@gmail.com "}
