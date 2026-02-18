@@ -1,0 +1,20 @@
+---
+title: "MPC for Vine Pruning"
+description: Point cloud based visual planning and nonlinear MPC for autonomous robotic vine pruning.
+date: "2024-01-01"
+published: true
+media: /images/nmpc.gif
+paper: /papers/Vine_Pruning_MPC.pdf
+---
+
+# Point Cloud Based Visual Planning and Servoing for Autonomous Vine Pruning
+
+This project presents an autonomous vine pruning system that combines 3D point cloud perception with nonlinear model predictive control (NMPC) for precise robotic cutting. The system uses depth sensing to reconstruct vine structure, identifies pruning points, and plans collision-free trajectories to reach and cut canes in real time.
+
+## Approach
+
+A point cloud processing pipeline segments individual vine canes and identifies optimal pruning locations based on horticultural guidelines. A nonlinear MPC controller then generates smooth, collision-free end-effector trajectories toward the target pruning points while respecting joint limits and workspace constraints. Visual servoing corrections are applied in the control loop to handle perception uncertainty and plant motion.
+
+## Results
+
+The system was evaluated on real grapevine structures, demonstrating reliable cane detection, accurate trajectory planning, and successful pruning cuts across varied vine geometries.

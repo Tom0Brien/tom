@@ -47,6 +47,9 @@ export const Project = defineDocumentType(() => ({
     media: {
       type: "string",
     },
+    paper: {
+      type: "string",
+    },
   },
   computedFields,
 }));

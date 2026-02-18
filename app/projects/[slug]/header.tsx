@@ -11,10 +11,12 @@ type Props = {
     description: string;
     repository?: string;
     media?: string;
+    paper?: string;
   };
 };
 export const Header: React.FC<Props> = ({ project }) => {
   const ref = useRef<HTMLElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [isIntersecting, setIntersecting] = useState(true);
 
   const links: { label: string; href: string }[] = [];
@@ -30,6 +32,12 @@ export const Header: React.FC<Props> = ({ project }) => {
       href: project.url,
     });
   }
+  if (project.paper) {
+    links.push({
+      label: "Paper",
+      href: project.paper,
+    });
+  }
   useEffect(() => {
     if (!ref.current) return;
     const observer = new IntersectionObserver(([entry]) =>
@@ -43,13 +51,13 @@ export const Header: React.FC<Props> = ({ project }) => {
   return (
     <header
       ref={ref}
-      className="relative isolate overflow-hidden bg-gradient-to-tl from-black via-zinc-900 to-black"
+      className="relative isolate overflow-hidden bg-neo-bg"
     >
       <div
         className={`fixed inset-x-0 top-0 z-50 backdrop-blur lg:backdrop-blur-none duration-200 border-b lg:bg-transparent ${
           isIntersecting
-            ? "bg-zinc-900/0 border-transparent"
-            : "bg-white/10  border-zinc-200 lg:border-transparent"
+            ? "bg-white/0 border-transparent"
+            : "bg-white/80  border-neo-bg-secondary lg:border-transparent"
         }`}
       >
         <div className="container flex flex-row-reverse items-center justify-between p-6 mx-auto">
@@ -58,8 +66,8 @@ export const Header: React.FC<Props> = ({ project }) => {
               title="View counter for this page"
               className={`duration-200 hover:font-medium flex items-center gap-1 ${
                 isIntersecting
-                  ? " text-zinc-400 hover:text-zinc-100"
-                  : "text-zinc-600 hover:text-zinc-900"
+                  ? " text-neo-text-secondary hover:text-neo-text-primary"
+                  : "text-neo-text-secondary hover:text-neo-text-primary"
               } `}
             ></span>
             <Link
@@ -69,8 +77,8 @@ export const Header: React.FC<Props> = ({ project }) => {
               <Linkedin
                 className={`w-6 h-6 duration-200 hover:font-medium ${
                   isIntersecting
-                    ? " text-zinc-400 hover:text-zinc-100"
-                    : "text-zinc-600 hover:text-zinc-900"
+                    ? " text-neo-text-secondary hover:text-neo-text-primary"
+                    : "text-neo-text-secondary hover:text-neo-text-primary"
                 } `}
               />
             </Link>
@@ -78,19 +86,19 @@ export const Header: React.FC<Props> = ({ project }) => {
               <Github
                 className={`w-6 h-6 duration-200 hover:font-medium ${
                   isIntersecting
-                    ? " text-zinc-400 hover:text-zinc-100"
-                    : "text-zinc-600 hover:text-zinc-900"
+                    ? " text-neo-text-secondary hover:text-neo-text-primary"
+                    : "text-neo-text-secondary hover:text-neo-text-primary"
                 } `}
               />
             </Link>
           </div>
 
           <Link
-            href="/projects"
+            href="/#projects"
             className={`duration-200 hover:font-medium ${
               isIntersecting
-                ? " text-zinc-400 hover:text-zinc-100"
-                : "text-zinc-600 hover:text-zinc-900"
+                ? " text-neo-text-secondary hover:text-neo-text-primary"
+                : "text-neo-text-secondary hover:text-neo-text-primary"
             } `}
           >
             <ArrowLeft className="w-6 h-6 " />
@@ -100,19 +108,23 @@ export const Header: React.FC<Props> = ({ project }) => {
       <div className="container mx-auto relative isolate overflow-hidden py-24 sm:py-32">
         <div className="mx-auto max-w-7xl px-6 lg:px-8 text-center flex flex-col items-center">
           <div className="mx-auto max-w-2xl lg:mx-0">
-            <h1 className="text-4xl font-bold tracking-tight text-white sm:text-6xl font-display">
+            <h1 className="text-4xl font-medium tracking-tight text-neo-accent sm:text-6xl">
               {project.title}
             </h1>
-            <p className="mt-6 text-lg leading-8 text-zinc-300">
+            <p className="mt-6 text-lg leading-8 text-neo-text-primary/70">
               {project.description}
             </p>
           </div>
 
           {project.media && (
-            <div className="relative w-full h-96 mt-8 overflow-hidden rounded-lg">
+            <div 
+              className="relative w-full h-96 mt-8 overflow-hidden rounded-lg border border-gray-100"
+              onMouseEnter={() => videoRef.current?.play().catch(() => {})}
+              onMouseLeave={() => videoRef.current?.pause()}
+            >
               {project.media.endsWith(".mp4") ? (
                 <video
-                  autoPlay
+                  ref={videoRef}
                   loop
                   muted
                   playsInline
@@ -132,7 +144,7 @@ export const Header: React.FC<Props> = ({ project }) => {
           )}
 
           <div className="mx-auto mt-10 max-w-2xl lg:mx-0 lg:max-w-none">
-            <div className="grid grid-cols-1 gap-y-6 gap-x-8 text-base font-semibold leading-7 text-white sm:grid-cols-2 md:flex lg:gap-x-10">
+            <div className="grid grid-cols-1 gap-y-6 gap-x-8 text-base font-semibold leading-7 text-neo-text-primary sm:grid-cols-2 md:flex lg:gap-x-10">
               {links.map((link) => (
                 <Link target="_blank" key={link.label} href={link.href}>
                   {link.label} <span aria-hidden="true">&rarr;</span>

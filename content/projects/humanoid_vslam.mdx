@@ -1,0 +1,85 @@
+---
+title: "Humanoid Visual SLAM"
+description: Real-time humanoid state estimation fusing IMU attitude, kinematic odometry, and monocular visual SLAM for robust drift-free locomotion.
+date: "2025-02-18"
+url: https://nubook.nubots.net/
+repository: NUbots/NUbots
+published: true
+media: /images/vslam.mp4
+paper: /papers/ACRA2025___Humanoid_VSLAM-1.pdf
+---
+
+# Real-Time Humanoid State Estimation with IMU, Kinematic Odometry, and Visual SLAM
+
+We present a real-time humanoid state estimation method that loosely fuses inertial attitude (Mahony filter), kinematic odometry from legged locomotion, and a visual SLAM frontend based on the open-source Stella system. Humanoid locomotion induces rapid viewpoint changes, motion blur, and contact-driven dynamics that challenge conventional visual and visual-inertial pipelines.
+
+## Problem Statement
+
+We consider a world-fixed inertial frame $\mathcal{W}$ and a body-fixed frame $\mathcal{B}$ rigidly attached to the humanoid robot midway between the hip yaw joints. The aim is to provide a real-time estimate of the floating base pose:
+
+$$
+\mathbf{H}_b^w = \begin{bmatrix} \mathbf{R}_b^w & \mathbf{r}_{B/W}^w \\ \mathbf{0} & 1 \end{bmatrix}
+$$
+
+where $\mathbf{R}_b^w \in SO(3)$ is the rotation from $\mathcal{B}$ to $\mathcal{W}$, and $\mathbf{r}_{B/W}^w \in \mathbb{R}^3$ is the body position in $\mathcal{W}$. The six degrees-of-freedom $(x, y, z, \phi, \theta, \psi)$ form the basis of evaluation.
+
+## Our Approach
+
+Our approach targets real-time humanoid state estimation by combining three sensor inputs: IMU (gyroscope + accelerometer), servo position encoders, and a monocular RGB camera. For each degree-of-freedom we develop a pipeline best tailored for that component.
+
+### Mahony Filter Attitude Estimation
+
+We estimate the floating base orientation using the Mahony filter, a nonlinear complementary filter on $SO(3)$. It fuses gyroscope and accelerometer measurements with integral correction terms, providing reliable roll and pitch estimates. In the absence of a magnetometer, yaw gradually drifts over time and requires correction from other sources.
+
+### Anchor Point Kinematic Odometry
+
+Leveraging servo position sensors, we employ the anchor point strategy: when a foot is in contact, an anchor point $A$ on its sole is assumed fixed in $\mathcal{W}$. The body frame is then computed as:
+
+$$
+\mathbf{H}_b^w = \mathbf{H}_a^w \times (\mathbf{H}_a^b)^{-1}
+$$
+
+Each time a support foot switch occurs, the anchor point is updated to the new support foot using relative kinematics between feet. While simple and computationally light, this approach accumulates drift over time from foot slippage, sole compliance, and encoder quantisation.
+
+### Visual SLAM with Online Scale Estimation
+
+We adopt Stella, an open-source fork of the OpenVSLAM framework, which combines an ORB feature-based frontend with keyframe-based pose graph optimisation, loop closure, and relocalisation.
+
+Since we employ monocular SLAM, camera poses remain up to an arbitrary scale. We recover metric scale online by exploiting ground-plane geometry. Map point rays are intersected with the $z=0$ plane using the known camera height from kinematics:
+
+$$
+d_i = \frac{|h|}{|(\mathbf{u}_i)_z|}, \qquad \mathbf{r}_{P_i/W,g}^w = \mathbf{r}_{C/W}^w + d_i \mathbf{u}_i
+$$
+
+The per-point scales are averaged and smoothed with exponential filtering to produce a stable global scale factor.
+
+### Filtering and Fusion
+
+To address the limitations of each component, we adopt a loosely coupled architecture:
+
+- **Yaw filter**: A lightweight complementary filter combining gyroscope integration with kinematic yaw updates and visual SLAM corrections, adaptively estimating and compensating for gyroscope bias.
+
+- **Sliding-window smoothing**: A weighted least-squares problem over the most recent $N$ body states balances smoothness with agreement to visual and kinematic measurements:
+
+$$
+J(\mathbf{X}) = \sum_{i} w_{sm} \|\mathbf{x}_{i+1} - \mathbf{x}_i\|^2 + \sum_{i \in \mathcal{M}_s} w_{s,i} \|\hat{\mathbf{x}}^s_i - \mathbf{x}_i\|^2 + \sum_{i \in \mathcal{M}_a} w_{a,i} \|\hat{\mathbf{x}}^a_i - \mathbf{x}_i\|^2
+$$
+
+The visual weights $w_{s,i}$ are adaptive and reflect the SLAM frontend status (high during stable tracking, reduced during relocalisation, near-zero when lost).
+
+## Results
+
+Experiments were conducted on the NUgus humanoid robot across four scenarios, comparing IMU+kinematics, vision-only (Stella), and the fused system.
+
+| Scenario | Method | X [m] | Y [m] | Z [m] | Roll [°] | Pitch [°] | Yaw [°] |
+|----------|--------|-------|-------|-------|----------|-----------|---------|
+| Stella alone (dropout) | Stella | 0.479 | **0.035** | 0.004 | 52.55 | 51.16 | 7.63 |
+| | IMU+Kinematics | **0.070** | 0.090 | 0.004 | **3.22** | **15.35** | **6.21** |
+| Pickup | Fused System | **0.063** | **0.032** | 0.026 | 1.28 | 1.59 | **1.48** |
+| | IMU+Kinematics | N/A | N/A | 0.026 | 1.28 | 1.59 | 4.08 |
+| Forward Walking | Fused System | **0.021** | **0.041** | 0.004 | 1.27 | 1.75 | **1.50** |
+| | IMU+Kinematics | 0.162 | 0.113 | 0.004 | 1.27 | 1.75 | 6.59 |
+| Visual Dropout | Fused System | **0.112** | **0.101** | 0.005 | 1.43 | 2.21 | **4.00** |
+| | IMU+Kinematics | 0.236 | 0.181 | 0.005 | 1.43 | 2.21 | 11.11 |
+
+Across all scenarios, the fused estimator consistently outperforms individual modalities. Yaw errors were reduced by a factor of 3–5× compared to IMU+kinematics, with significantly lower translational drift. The system degrades gracefully during visual dropout and reconverges once tracking resumes.

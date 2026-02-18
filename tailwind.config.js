@@ -36,9 +36,18 @@ module.exports = {
 				"gradient-radial":
 					"radial-gradient(50% 50% at 50% 50%, var(--tw-gradient-stops))",
 			},
+			colors: {
+				neo: {
+					bg: "#FFFFFF",
+					"bg-secondary": "#F7F7F7",
+					"text-primary": "rgba(0, 0, 0, 0.72)",
+					"text-secondary": "rgba(0, 0, 0, 0.44)",
+					accent: "#454545",
+				},
+			},
 			animation: {
 				"fade-in": "fade-in 3s ease-in-out forwards",
-				title: "title 3s ease-out forwards",
+				title: "title 1s ease-out forwards",
 				"fade-left": "fade-left 3s ease-in-out forwards",
 				"fade-right": "fade-right 3s ease-in-out forwards",
 			},

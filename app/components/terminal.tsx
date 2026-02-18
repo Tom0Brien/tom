@@ -32,7 +32,7 @@ export default function Terminal({ text }: TerminalProps) {
   }, [text]);
 
   return (
-    <div className="text-white text-sm p-4 rounded-lg font-mono lg:w-full sm:w-64 break-all">
+    <div className="text-neo-text-primary text-sm p-4 rounded-lg font-mono lg:w-full sm:w-64 break-all">
       <div className="whitespace-pre-line overflow-wrap">
         <span className="text-zinc-500">tom</span>
         <span>@</span>

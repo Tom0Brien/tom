@@ -1,0 +1,24 @@
+---
+title: "Policy Guided MPC"
+description: Combining learned RL policies with model predictive control for robust and constraint-aware robot manipulation.
+date: "2025-02-18"
+published: true
+media: /images/policycem.mp4
+paper: /papers/Policy_guided_MPC.pdf
+---
+
+# Policy Guided Model Predictive Control
+
+This project explores combining reinforcement learning (RL) policies with sampling-based model predictive control (MPC) to achieve robust, constraint-aware robot control. The key idea is to use a learned policy as a warm-start prior for the MPC sampling distribution, guiding the optimisation toward high-quality trajectories while retaining the ability to enforce constraints and adapt online.
+
+## Motivation
+
+Pure RL policies can achieve impressive performance but often struggle with constraint satisfaction and generalisation to out-of-distribution scenarios. Conversely, sampling-based MPC methods like the Cross-Entropy Method (CEM) provide online optimisation with explicit constraint handling, but can be sample-inefficient and slow to converge without a good initial guess. By combining both, we leverage the strengths of each approach.
+
+## Approach
+
+A pre-trained RL policy provides a nominal action sequence that seeds the MPC optimiser. The MPC then refines this trajectory by sampling perturbations around the policy output, evaluating them against a cost function that includes task objectives and constraint penalties, and iteratively narrowing the distribution toward optimal actions. This policy-guided sampling dramatically improves convergence speed and solution quality compared to uninformed MPC, while maintaining the flexibility to handle constraints that the policy was never trained on.
+
+## Results
+
+Experiments on simulated manipulation tasks demonstrate that the fused approach achieves higher success rates and better constraint satisfaction than either method alone, with particular improvements in scenarios involving workspace boundaries and obstacle avoidance.
